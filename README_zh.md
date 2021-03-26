@@ -2,20 +2,15 @@
 
 [![Build Status](https://github.com/johnnychen94/PkgServerClient.jl/workflows/CI/badge.svg)](https://github.com/johnnychen94/PkgServerClient.jl/actions)
 [![Coverage](https://codecov.io/gh/johnnychen94/PkgServerClient.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/johnnychen94/PkgServerClient.jl)
-[![中文README](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](README_zh.md)
+[![英文README](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](README.md)
 
-> Julia >= v"1.4" is required to use the Pkg server feature.
+> 需要 1.4 以后的 Julia 版本
 
-A list of 3rd-party Julia pkg/storage server mirror are provided in the [registry](src/registry.jl),
-this package gives you a way to automatically switch to the nearest one in terms of RTT(round trip time).
+[registry](src/registry.jl) 里面记录了一些 Julia 包服务器及镜像站的信息， `PkgServerClient.jl` 会根据延迟将你自动导向最近的镜像站。
 
-In plain words, you could manually switch Julia pkg server by setting environment variable
-`JULIA_PKG_SERVER`, and all that this package do is to set this variable automatically and smartly.
+# Example
 
-## Example
-
-You only need to load this package in order to use it. Note that the environment variable `JULIA_PKG_SERVER`
-is set after you load this package.
+你需要做的仅仅只是加载这个包， 通过 `versioninfo()` 可以看到， 在加载完成后添加了一条 `JULIA_PKG_SERVER` 这个记录。
 
 ```julia
 julia> versioninfo()
@@ -43,12 +38,11 @@ Environment:
   JULIA_PKG_SERVER = https://mirrors.sjtug.sjtu.edu.cn/julia
 ```
 
-Note that if you already have `JULIA_PKG_SERVER` environment set, then loading this package is a
-no-op; nothing will change.
+需要注意的是， 如果之前已经在设置过 `JULIA_PKG_SERVER` 这一环境变量， 则加载这个包的时候什么也不会发生： 
+你依然还是在使用你之前手动设置的包服务器作为上游。
 
-You could optionally add the following line to `$JULIA_DEPOT_PATH/config/startup.jl` (by default it
-is `~/.julia/config/startup.jl`) so that every time when you start Julia, it points you to the
-nearest pkg server.
+你可以考虑将下面的代码加入到你的 `startup.jl` 文件里(默认情况下是 `~/.julia/config/startup.jl`)，
+这里面的代码会在每一次 Julia 启动的时候被调用， 从而实现自动切换镜像的目的：
 
 ```julia
 if VERSION >= v"1.4"
@@ -60,15 +54,15 @@ if VERSION >= v"1.4"
 end
 ```
 
-Also note that it is not guaranteed which `JULIA_PKG_SERVER` will be set when you load this package.
-If you wish, you could manually call `PkgServerClient.generate_startup([server = <nearest-server>])`,
-which will write the following code to your `startup.jl` file.
+因为这种切换是自动的， 所以根据网络情况的不同， 每次使用的镜像也是不一样的。 如果你需要在一定程度上固定的镜像站作为上游
+的话， 你可以直接使用 `generate_startup([server = <nearest-server>])`， 它会自动将下述代码插入到 `startup.jl`
+里面：
 
 ```julia
 `ENV["JULIA_PKG_SERVER"] = <server-url>
 ```
 
-For example:
+例如：
 
 ```julia
 julia> PkgServerClient.generate_startup("JuliaLang")
@@ -78,11 +72,10 @@ julia> PkgServerClient.generate_startup("JuliaLang")
 └   ConfigFile = "/Users/jc/.julia/config/startup.jl"
 ```
 
-### Get registry information
+## 其他
 
-Furthermore, if you're interested, you could check the registry with `PkgServerClient.registry` and
-`PkgServerClient.registry_response_time()`. As of the time of writing, here it's what I get in China:
-
+如果感兴趣的话， 你也可以通过 `PkgServerClient.registry` 和 `PkgServerClient.registry_response_time()` 来
+查询一些服务器信息。 例如， 下面是我写这个文档时的执行结果：
 
 ```julia
 julia> PkgServerClient.registry
@@ -108,13 +101,6 @@ Dict{String, Float64} with 8 entries:
   "NJU"       => 0.0445983
 ```
 
-It might be outdated, but you get the idea.
+# 添加新的镜像站
 
-## Adding new mirrors
-
-Modify `registry.jl` and that's all!
-
-## Acknowledgement
-
-The mirror set functionality originally lived in [JuliaZH.jl](https://github.com/JuliaCN/JuliaZH.jl).
-I added the auto-switch part and thus made it an independent package.
+修改 `registry.jl` 文件即可。

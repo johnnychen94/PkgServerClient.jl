@@ -12,4 +12,7 @@ using PkgServerClient: registry
         PkgServerClient.set_mirror(k)
         ENV["JULIA_PKG_SERVER"] == registry[k].url
     end
+
+    println("Reigstry response time:")
+    foreach(println, PkgServerClient.registry_response_time())
 end

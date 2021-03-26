@@ -14,6 +14,8 @@ Query and return the registry response time. If any of the HEAD request exceeds 
 the response time is set to `Inf`.
 """
 function registry_response_time(; timeout=1)
+    timeout = max(0.001, timeout) # The minimal is 1ms, otherwise it is likely to be ignored.
+
     function response_time(url, timeout)
         try
             return @elapsed Downloads.request(url*"/registries",
@@ -33,7 +35,7 @@ function registry_response_time(; timeout=1)
 
     # When all fails to response in a very limited `timeout` time, set the default to "JuliaLang"
     # with a convenient lie.
-    if all(values(_registry_response_time) .== timeout)
+    if all(isinf, values(_registry_response_time))
         _registry_response_time["JuliaLang"] = 0
     end
     return _registry_response_time

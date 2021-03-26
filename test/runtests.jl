@@ -2,7 +2,7 @@ using Test
 
 ENV["JULIA_PKG_SERVER"] = ""
 using PkgServerClient
-using PkgServerClient: registry
+using PkgServerClient: registry, registry_response_time
 
 @testset "PkgServerClient.jl" begin
     @test !isempty(ENV["JULIA_PKG_SERVER"])
@@ -14,5 +14,8 @@ using PkgServerClient: registry
     end
 
     println("Reigstry response time:")
-    foreach(println, PkgServerClient.registry_response_time())
+    foreach(println, registry_response_time())
+
+    # make sure the fallback "JuliaLang" is used when network issue happens
+    @test registry_response_time(timeout=0.001)["JuliaLang"] == 0
 end

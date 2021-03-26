@@ -63,6 +63,7 @@ $(registry_str)
 By default, it will use the one with lowest response time.
 """
 function set_mirror(server::String = get_fasted_mirror())
+    haskey(registry, server) || throw(ArgumentError("Server $server not found. Please check `PkgServerClient.registry`."))
     ENV["JULIA_PKG_SERVER"] = registry[server].url
     return nothing
 end
@@ -82,6 +83,7 @@ where `mirror-url` is the url to upstream `server`. By default, it will use
 the one with lowest response time.
 """
 function generate_startup(server::String = get_fasted_mirror())
+    haskey(registry, server) || throw(ArgumentError("Server $server not found. Please check `PkgServerClient.registry`."))
     # Manually update the response time before doing this.
     registry_response_time()
 

@@ -1,5 +1,9 @@
 const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
     # in alphabetic order
+    "ISCAS" => (;
+        org="中国科学院软件研究所",
+        url="https://mirror.iscas.ac.cn/julia"
+    ),
     "BFSU" => (;
         org="北京外国语大学开源软件镜像站",
         url="https://mirrors.bfsu.edu.cn/julia"

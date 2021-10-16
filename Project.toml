@@ -1,7 +1,7 @@
 name = "PkgServerClient"
 uuid = "9c9e696b-6b05-402c-8ae4-5dc38852c714"
 authors = ["Johnny Chen <johnnychen94@hotmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"

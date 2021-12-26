@@ -102,7 +102,7 @@ function generate_startup(server::String = get_fasted_mirror())
 
     new_upstream = registry[server].url
     new_line = "ENV[\"JULIA_PKG_SERVER\"] = \"$(new_upstream)\""
-    
+
     pkg_matches = map(x->match(regex_PKG_SERVER, x), startup_lines)
     pkg_indices = findall(x->!isnothing(x), pkg_matches)
     if isempty(pkg_indices)
@@ -127,7 +127,7 @@ end
 function _auto_switch()
     # only do smart pkg server redirection when users haven't set the environment
     # `JULIA_PKG_SERVER` manually.
-    if isempty(get(ENV, "JULIA_PKG_SERVER", "")) 
+    if isempty(get(ENV, "JULIA_PKG_SERVER", ""))
         registry_response_time()
         mirror_node = get_fasted_mirror()
         set_mirror(mirror_node)

@@ -34,7 +34,10 @@ const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
     ),
 )
 
-# always put "JuliaLang" to the first
-registry_str = join(["- `\"$k\"`: $(registry[k].org)\n" for k in sort(collect(keys(registry)))])
-registry["JuliaLang"] = (; org="The official Julia pkg server", url="https://pkg.julialang.org")
-registry_str = "- `\"JuliaLang\"`: The official Julia pkg server\n" * registry_str
+function _registry_str()
+    # always put "JuliaLang" to the first
+    registry_str = join(["- `\"$k\"`: $(registry[k].org)\n" for k in sort(collect(keys(registry)))])
+    registry["JuliaLang"] = (; org="The official Julia pkg server", url="https://pkg.julialang.org")
+    registry_str = "- `\"JuliaLang\"`: The official Julia pkg server\n" * registry_str
+end
+const registry_str = _registry_str()

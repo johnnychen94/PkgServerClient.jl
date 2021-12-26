@@ -78,6 +78,30 @@ julia> PkgServerClient.generate_startup("JuliaLang")
 └   ConfigFile = "/Users/jc/.julia/config/startup.jl"
 ```
 
+### Using private pkg servers
+
+The following startup script enables you to always use available private pkg servers set up in LAN
+network while still falls back to public pkg servers when you leave the LAN network.
+
+```julia
+try
+    import PkgServerClient
+    # This is the server I set up in the school LAN network so it's not reachable outside
+    PkgServerClient.registry["LFLab"] = (; org="LFLab, Math ECNU", url="https://mirrors.lflab.cn/julia")
+    @async begin
+        resp = PkgServerClient.registry_response_time()
+        if !isinf(resp["LFLab"])
+            PkgServerClient.set_mirror("LFLab")
+        else
+            # fallback to "nearest" public pkg servers
+            PkgServerClient.set_mirror()
+        end
+    end
+catch e
+    @warn "error while importing PkgServerClient" e
+end
+```
+
 ### Get registry information
 
 Furthermore, if you're interested, you could check the registry with `PkgServerClient.registry` and

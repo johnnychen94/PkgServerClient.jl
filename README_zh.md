@@ -8,7 +8,7 @@
 
 [registry](src/registry.jl) 里面记录了一些 Julia 包服务器及镜像站的信息， `PkgServerClient.jl` 会根据延迟将你自动导向最近的镜像站。
 
-# Example
+## 例子
 
 你需要做的仅仅只是加载这个包， 通过 `versioninfo()` 可以看到， 在加载完成后添加了一条 `JULIA_PKG_SERVER` 这个记录。
 
@@ -70,6 +70,30 @@ julia> PkgServerClient.generate_startup("JuliaLang")
 │   NewServer = "https://pkg.julialang.org"
 │   OldServer = "https://mirrors.bfsu.edu.cn/julia"
 └   ConfigFile = "/Users/jc/.julia/config/startup.jl"
+```
+
+### 使用内网 Pkg server
+
+有些时候（比如说在学校或者公司）会搭建局域网下的 Pkg Server， 下面这个 `startup.jl` 脚本会自动检测并自动接入到
+内网服务器。
+
+```julia
+try
+    import PkgServerClient
+    # 这是我在 ECNU 内部搭建的一个镜像服务器所以在外面无法访问
+    PkgServerClient.registry["LFLab"] = (; org="LFLab, Math ECNU", url="https://mirrors.lflab.cn/julia")
+    @async begin
+        resp = PkgServerClient.registry_response_time()
+        if !isinf(resp["LFLab"])
+            PkgServerClient.set_mirror("LFLab")
+        else
+            # 如果 LFLab 无法访问的话， 则使用 “最近” 的公开服务器
+            PkgServerClient.set_mirror()
+        end
+    end
+catch e
+    @warn "error while importing PkgServerClient" e
+end
 ```
 
 ## 其他

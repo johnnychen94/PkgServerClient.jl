@@ -32,6 +32,10 @@ const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
         org="中国科学技术大学开源软件镜像",
         url="https://mirrors.ustc.edu.cn/julia"
     ),
+    "PKU" => (;
+        org="北京大学开源软件镜像站",
+        url="https://mirrors.pku.edu.cn/julia"
+    ),
 )
 
 function _registry_str()

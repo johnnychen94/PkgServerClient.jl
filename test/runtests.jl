@@ -27,6 +27,10 @@ end
 
 
     @test all(keys(registry)) do k
+        if get(registry[k], :deprecated, false)
+            return true
+        end
+
         PkgServerClient.set_mirror(k)
         ENV["JULIA_PKG_SERVER"] == registry[k].url
     end

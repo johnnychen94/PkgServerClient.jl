@@ -1,4 +1,4 @@
-const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
+const registry = Dict{String, NamedTuple}(
     # in alphabetic order
     "ISCAS" => (;
         org="中国科学院软件研究所",
@@ -6,15 +6,16 @@ const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
     ),
     "BFSU" => (;
         org="北京外国语大学开源软件镜像站",
-        url="https://mirrors.bfsu.edu.cn/julia"
+        url="https://mirrors.bfsu.edu.cn/julia",
+        deprecated=true, # https://github.com/tuna/issues/issues/1677
     ),
     "NJU" => (;
         org="南京大学开源镜像站",
         url="https://mirrors.nju.edu.cn/julia")
     ,
-    "OpenTUNA" => (;
-        org="OpenTUNA开源镜像站 -- TUNA 协会",
-        url="https://opentuna.cn/julia"
+    "PKU" => (;
+        org="北京大学开源镜像站",
+        url="https://mirrors.pku.edu.cn/julia",
     ),
     "SJTUG" => (;
         org="上海交通大学Linux用户组 (SJTUG) 软件源镜像服务",
@@ -26,7 +27,8 @@ const registry = Dict{String, NamedTuple{(:org, :url), Tuple{String, String}}}(
     ),
     "TUNA" => (;
         org="清华大学开源软件镜像站 -- TUNA 协会",
-        url="https://mirrors.tuna.tsinghua.edu.cn/julia"
+        url="https://mirrors.tuna.tsinghua.edu.cn/julia",
+        deprecated=true, # https://github.com/tuna/issues/issues/1677
     ),
     "USTC" => (;
         org="中国科学技术大学开源软件镜像",

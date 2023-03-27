@@ -30,6 +30,11 @@ function registry_response_time(; timeout=1)
     # takes `timeout` seconds to execute. An improvement is to early exit when there're enough response counts
     # from the registry.
     @sync for (k, v) in registry
+        if get(v, :deprecated, false)
+            _registry_response_time[k] = Inf
+            # skip deprecated server
+            continue
+        end
         @async _registry_response_time[k] = response_time(v.url, timeout)
     end
 
@@ -64,6 +69,10 @@ By default, it will use the one with lowest response time.
 """
 function set_mirror(server::String = get_fasted_mirror())
     haskey(registry, server) || throw(ArgumentError("Server $server not found. Please check `PkgServerClient.registry`."))
+    if get(registry[server], :deprecated, false)
+        server = get_fasted_mirror()
+        @warn "The server $server no longer serves Julia. Use $server instead."
+    end
     ENV["JULIA_PKG_SERVER"] = registry[server].url
     return nothing
 end
@@ -131,6 +140,8 @@ function _auto_switch()
         registry_response_time()
         mirror_node = get_fasted_mirror()
         set_mirror(mirror_node)
+    else
+        @debug "Skip auto switch" ENV=ENV["JULIA_PKG_SERVER"]
     end
 end
 

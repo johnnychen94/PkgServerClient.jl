@@ -53,7 +53,7 @@ end
         @test !isfile(startup_path)
         PkgServerClient.generate_startup()
         @test !isempty(query_upstream(startup_path))
-        PkgServerClient.generate_startup("BFSU")
-        @test query_upstream(startup_path) == "https://mirrors.bfsu.edu.cn/julia"
+        PkgServerClient.generate_startup("PKU")
+        @test query_upstream(startup_path) == "https://mirrors.pku.edu.cn/julia"
     end
 end

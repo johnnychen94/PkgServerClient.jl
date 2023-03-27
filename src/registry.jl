@@ -7,7 +7,7 @@ const registry = Dict{String, NamedTuple}(
     "BFSU" => (;
         org="北京外国语大学开源软件镜像站",
         url="https://mirrors.bfsu.edu.cn/julia",
-        deprecated=true,
+        deprecated=true, # https://github.com/tuna/issues/issues/1677
     ),
     "NJU" => (;
         org="南京大学开源镜像站",
@@ -28,7 +28,7 @@ const registry = Dict{String, NamedTuple}(
     "TUNA" => (;
         org="清华大学开源软件镜像站 -- TUNA 协会",
         url="https://mirrors.tuna.tsinghua.edu.cn/julia",
-        deprecated=true,
+        deprecated=true, # https://github.com/tuna/issues/issues/1677
     ),
     "USTC" => (;
         org="中国科学技术大学开源软件镜像",
